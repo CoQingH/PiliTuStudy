@@ -13,7 +13,7 @@ class StyleString {
 }
 
 class Constants {
-  static const appName = 'PiliPlus';
+  static const appName = 'PiliTuStudy';
   static const sourceCodeUrl = 'https://github.com/CoQingH/PiliStudy';
 
   // 27eb53fc9058f8c3  移动端 Android

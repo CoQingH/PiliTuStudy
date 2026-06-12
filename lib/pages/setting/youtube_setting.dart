@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pilistudy/app/theme.dart';
+import 'package:pilistudy/http/fav.dart';
+import 'package:pilistudy/utils/accounts.dart';
 import 'package:pilistudy/utils/storage.dart';
 import 'package:pilistudy/utils/storage_key.dart';
 import 'package:hive/hive.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class YoutubeSettingPage extends StatefulWidget {
   const YoutubeSettingPage({super.key});
@@ -15,6 +18,8 @@ class _YoutubeSettingPageState extends State<YoutubeSettingPage> {
   bool _get(String key, bool def) => GStorage.setting.get(key, defaultValue: def);
   int _getInt(String key, int def) => GStorage.setting.get(key, defaultValue: def);
   void _set(String key, dynamic v) => setState(() => GStorage.setting.put(key, v));
+  List<int> _getExempt() { final r = GStorage.setting.get(SettingBoxKey.exemptFavFoldersForLimit, defaultValue: <int>[]); return r is List ? r.cast<int>() : <int>[]; }
+  String _exemptLabel() { final ids = _getExempt(); return ids.isEmpty ? '无' : '${ids.length} 个收藏夹'; }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,7 @@ class _YoutubeSettingPageState extends State<YoutubeSettingPage> {
           const _Sec('每日限额'),
           _Sel(icon: Icons.timer_outlined, title: '每日时长上限', cur: _getInt(SettingBoxKey.dailyTimeLimitMinutes, 0), opts: const [0,15,30,45,60], labs: const ['不限','15min','30min','45min','60min'], onSel: (v) => _set(SettingBoxKey.dailyTimeLimitMinutes, v)),
           _Sel(icon: Icons.videocam_outlined, title: '每日视频数上限', cur: _getInt(SettingBoxKey.dailyVideoCountLimit, 0), opts: const [0,3,5,8,10,15], labs: const ['不限','3个','5个','8个','10个','15个'], onSel: (v) => _set(SettingBoxKey.dailyVideoCountLimit, v)),
+          _FavExempt(cur: _getExempt()),
           const _Sec('护眼'),
           _Sw(icon: Icons.remove_red_eye_outlined, title: '护眼提醒', subtitle: '连续播放后强制休息', value: _get(SettingBoxKey.enableEyeCare, false), onChanged: (v) => _set(SettingBoxKey.enableEyeCare, v)),
           _Sel(icon: Icons.schedule, title: '护眼间隔', cur: _getInt(SettingBoxKey.eyeCareIntervalMinutes, 20), opts: const [15,20,25,30,40], labs: const ['15min','20min','25min','30min','40min'], onSel: (v) => _set(SettingBoxKey.eyeCareIntervalMinutes, v)),
@@ -66,6 +72,58 @@ class _Sec extends StatelessWidget { final String t; const _Sec(this.t);
 class _Sw extends StatelessWidget { final IconData icon; final String title, subtitle; final bool value; final ValueChanged<bool> onChanged;
   const _Sw({required this.icon, required this.title, this.subtitle='', required this.value, required this.onChanged});
   @override Widget build(c) { final t1=Theme.of(c).colorScheme.onSurface; final t3=Theme.of(c).textTheme.bodySmall!.color; return ListTile(leading:Icon(icon,color:t1,size:22), title:Text(title,style:TextStyle(fontSize:15,color:t1)), subtitle: subtitle.isNotEmpty?Text(subtitle,style:TextStyle(fontSize:12,color:t3)):null, trailing:Switch(value:value,onChanged:onChanged,activeColor:YTTheme.red), shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12))); }}
+
+class _FavExempt extends StatelessWidget {
+  final List<int> cur;
+  const _FavExempt({required this.cur});
+  @override
+  Widget build(BuildContext context) {
+    final t1 = Theme.of(context).colorScheme.onSurface;
+    final t2 = Theme.of(context).colorScheme.outline;
+    final label = cur.isEmpty ? '无' : '${cur.length} 个收藏夹';
+    return ListTile(
+      leading: const Icon(Icons.folder_off_outlined, color: YTTheme.red, size: 22),
+      title: Text('限额豁免收藏夹', style: TextStyle(fontSize: 15, color: t1)),
+      subtitle: Text('在这些收藏夹中观看不计入每日限额', style: TextStyle(fontSize: 12, color: Theme.of(context).textTheme.bodySmall!.color)),
+      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+        Text(label, style: TextStyle(fontSize: 14, color: t2)),
+        const SizedBox(width: 4),
+        Icon(Icons.chevron_right, color: Theme.of(context).textTheme.bodySmall!.color, size: 20),
+      ]),
+      onTap: () => _showPicker(context),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    );
+  }
+
+  Future<void> _showPicker(BuildContext context) async {
+    if (!Accounts.main.isLogin) { SmartDialog.showToast('请先登录'); return; }
+    final res = await FavHttp.allFavFolders(Accounts.main.mid);
+    if (!res.isSuccess) { res.toast(); return; }
+    final list = res.data.list;
+    if (list == null || list.isEmpty) return;
+    final exempt = List<int>.from(cur);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('选择豁免收藏夹'),
+        content: SingleChildScrollView(
+          child: Column(mainAxisSize: MainAxisSize.min,
+            children: list.map((item) => CheckboxListTile(
+              title: Text(item.title),
+              value: exempt.contains(item.id),
+              onChanged: (v) {
+                v == true ? exempt.add(item.id) : exempt.remove(item.id);
+                GStorage.setting.put(SettingBoxKey.exemptFavFoldersForLimit, exempt);
+                (ctx as Element).markNeedsBuild();
+              },
+            )).toList(),
+          ),
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('完成'))],
+      ),
+    );
+  }
+}
 
 class _Sel extends StatelessWidget { final IconData icon; final String title; final int cur; final List<int> opts; final List<String> labs; final ValueChanged<int> onSel;
   const _Sel({required this.icon, required this.title, required this.cur, required this.opts, required this.labs, required this.onSel});

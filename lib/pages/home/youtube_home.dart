@@ -33,7 +33,7 @@ class _YoutubeHomePageState extends State<YoutubeHomePage> {
           Text('PiliTuStudy', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -0.5, color: t1)),
         ]),
         actions: [
-          IconButton(icon: Icon(Icons.account_circle_outlined, color: t1, size: 24), tooltip: '登录/个人', onPressed: () => Get.toNamed('/login')),
+          IconButton(icon: Icon(Icons.account_circle_outlined, color: t1, size: 24), tooltip: '登录/个人', onPressed: () => Get.toNamed('/loginPage')),
           const SizedBox(width: 4),
         ],
       ),
