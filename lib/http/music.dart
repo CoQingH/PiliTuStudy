@@ -1,10 +1,10 @@
-import 'package:PiliPlus/http/api.dart';
-import 'package:PiliPlus/http/init.dart';
-import 'package:PiliPlus/http/loading_state.dart';
-import 'package:PiliPlus/models_new/music/bgm_detail.dart';
-import 'package:PiliPlus/models_new/music/bgm_recommend_list.dart';
-import 'package:PiliPlus/utils/accounts.dart';
-import 'package:PiliPlus/utils/wbi_sign.dart';
+import 'package:pilistudy/http/api.dart';
+import 'package:pilistudy/http/init.dart';
+import 'package:pilistudy/http/loading_state.dart';
+import 'package:pilistudy/models_new/music/bgm_detail.dart';
+import 'package:pilistudy/models_new/music/bgm_recommend_list.dart';
+import 'package:pilistudy/utils/accounts.dart';
+import 'package:pilistudy/utils/wbi_sign.dart';
 import 'package:dio/dio.dart';
 
 class MusicHttp {

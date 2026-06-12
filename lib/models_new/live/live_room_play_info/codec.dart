@@ -1,5 +1,5 @@
-import 'package:PiliPlus/models_new/live/live_room_play_info/url_info.dart';
-import 'package:PiliPlus/utils/extension.dart';
+import 'package:pilistudy/models_new/live/live_room_play_info/url_info.dart';
+import 'package:pilistudy/utils/extension.dart';
 
 class CodecItem {
   String? codecName;

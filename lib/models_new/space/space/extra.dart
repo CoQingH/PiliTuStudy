@@ -1,4 +1,4 @@
-import 'package:PiliPlus/models_new/space/space/card.dart';
+import 'package:pilistudy/models_new/space/space/card.dart';
 
 class Extra {
   SpaceCard? card;

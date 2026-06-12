@@ -1,160 +1,298 @@
+import 'package:pilistudy/common/constants.dart';
+import 'package:pilistudy/common/widgets/image/network_img_layer.dart';
+import 'package:pilistudy/common/widgets/scroll_physics.dart';
+import 'package:pilistudy/models/common/dynamic/dynamic_badge_mode.dart';
+import 'package:pilistudy/models/common/image_type.dart';
+import 'package:pilistudy/pages/home/controller.dart';
+import 'package:pilistudy/pages/main/controller.dart';
+import 'package:pilistudy/pages/mine/controller.dart';
+import 'package:pilistudy/services/usage_limit_service.dart';
+import 'package:pilistudy/utils/extension.dart';
+import 'package:pilistudy/utils/feed_back.dart';
+import 'package:pilistudy/utils/watch_time_tracker.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pilistudy/app/theme.dart';
+import 'package:get/get.dart' hide ContextExtensionss;
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
+  final HomeController _homeController = Get.put(HomeController());
+  final MainController _mainController = Get.put(MainController());
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: YTTheme.background,
-      appBar: AppBar(
-        backgroundColor: YTTheme.background,
-        title: Row(
+    super.build(context);
+    final theme = Theme.of(context);
+    WatchTimeTracker.checkReset();
+    final statusText = usageLimitService.statusText;
+    final timeRemaining = usageLimitService.remainingTimeMinutes();
+    final countRemaining = usageLimitService.remainingVideoCount();
+    final isNearLimit = (timeRemaining > 0 && timeRemaining <= 30) ||
+        (countRemaining > 0 && countRemaining <= 3);
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.play_circle_filled, color: YTTheme.red, size: 32),
-            const SizedBox(width: 4),
-            const Text(
-              'StudyTube',
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 20,
-                letterSpacing: -0.5,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: YTTheme.textPrimary),
-            onPressed: () {},
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        children: [
-          // Category chips
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: const [
-                _CategoryChip(label: '全部'),
-                _CategoryChip(label: '知识', selected: true),
-                _CategoryChip(label: '科技'),
-                _CategoryChip(label: '编程'),
-                _CategoryChip(label: '数学'),
-                _CategoryChip(label: '物理'),
-                _CategoryChip(label: '数码'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Status card
-          _StatusCard(),
-          const SizedBox(height: 24),
-          // Empty state
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 80),
-              child: Column(
-                children: [
-                  Icon(Icons.live_tv_off, size: 64, color: YTTheme.textTertiary.withValues(alpha: 0.5)),
-                  const SizedBox(height: 16),
-                  const Text(
-                    '推荐流已关闭',
-                    style: TextStyle(fontSize: 18, color: YTTheme.textSecondary),
+            searchBar(theme),
+            if (statusText.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 14.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    '使用搜索功能主动获取知识内容',
-                    style: TextStyle(fontSize: 14, color: YTTheme.textTertiary),
+                  decoration: BoxDecoration(
+                    color: isNearLimit
+                        ? theme.colorScheme.errorContainer.withValues(alpha: 0.6)
+                        : theme.colorScheme.secondaryContainer.withValues(alpha: 0.4),
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CategoryChip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  const _CategoryChip({required this.label, this.selected = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: ChoiceChip(
-        label: Text(label),
-        selected: selected,
-        onSelected: (_) {},
-        selectedColor: YTTheme.chipSelected,
-        backgroundColor: YTTheme.chipBg,
-        labelStyle: TextStyle(
-          color: selected ? YTTheme.background : YTTheme.textPrimary,
-          fontWeight: FontWeight.w500,
-        ),
-        side: BorderSide.none,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-    );
-  }
-}
-
-class _StatusCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // Placeholder — will integrate UsageLimitService later
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: YTTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: YTTheme.red.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(Icons.timer_outlined, color: YTTheme.red, size: 24),
-          ),
-          const SizedBox(width: 14),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '今日学习',
-                style: TextStyle(fontSize: 13, color: YTTheme.textSecondary),
-              ),
-              SizedBox(height: 2),
-              Text(
-                '0min / 60min',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: YTTheme.textPrimary,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isNearLimit
+                            ? Icons.hourglass_bottom
+                            : Icons.timer_outlined,
+                        size: 20,
+                        color: isNearLimit
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.secondary,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        statusText,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: isNearLimit
+                              ? theme.colorScheme.error
+                              : theme.colorScheme.secondary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
-          const Spacer(),
-          Icon(Icons.chevron_right, color: YTTheme.textTertiary),
-        ],
+          ],
+        ),
       ),
     );
   }
+
+  Widget searchBarAndUser(ThemeData theme) {
+    return Row(
+      children: [
+        searchBar(theme),
+        const SizedBox(width: 4),
+        Obx(
+          () => _homeController.accountService.isLogin.value
+              ? msgBadge(_mainController)
+              : const SizedBox.shrink(),
+        ),
+        const SizedBox(width: 8),
+        Semantics(
+          label: "我的",
+          child: Obx(
+            () => _homeController.accountService.isLogin.value
+                ? Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      NetworkImgLayer(
+                        type: ImageType.avatar,
+                        width: 34,
+                        height: 34,
+                        src: _homeController.accountService.face.value,
+                      ),
+                      Positioned.fill(
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: InkWell(
+                            onTap: _mainController.toMinePage,
+                            splashColor: theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.3),
+                            customBorder: const CircleBorder(),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: -6,
+                        bottom: -6,
+                        child: Obx(
+                          () => MineController.anonymity.value
+                              ? IgnorePointer(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          theme.colorScheme.secondaryContainer,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      size: 16,
+                                      MdiIcons.incognito,
+                                      color: theme
+                                          .colorScheme
+                                          .onSecondaryContainer,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                      ),
+                    ],
+                  )
+                : defaultUser(
+                    theme: theme,
+                    onPressed: _mainController.toMinePage,
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget customAppBar(ThemeData theme) {
+    if (!_homeController.hideSearchBar) {
+      return Container(
+        height: 52,
+        padding: const EdgeInsets.fromLTRB(14, 6, 14, 0),
+        child: searchBarAndUser(theme),
+      );
+    }
+    return StreamBuilder(
+      stream: _homeController.searchBarStream?.stream.distinct(),
+      initialData: true,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return AnimatedOpacity(
+          opacity: snapshot.data ? 1 : 0,
+          duration: const Duration(milliseconds: 300),
+          child: AnimatedContainer(
+            curve: Curves.easeInOutCubicEmphasized,
+            duration: const Duration(milliseconds: 500),
+            height: snapshot.data ? 52 : 0,
+            padding: const EdgeInsets.fromLTRB(14, 6, 14, 0),
+            child: searchBarAndUser(theme),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget searchBar(ThemeData theme) {
+    return SizedBox(
+      height: 44,
+      child: Material(
+        borderRadius: const BorderRadius.all(Radius.circular(25)),
+        color: theme.colorScheme.onSecondaryContainer.withValues(alpha: 0.05),
+        child: InkWell(
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
+          splashColor: theme.colorScheme.primaryContainer.withValues(
+            alpha: 0.3,
+          ),
+          onTap: () => Get.toNamed(
+            '/search',
+            parameters: {
+              if (_homeController.enableSearchWord)
+                'hintText': _homeController.defaultSearch.value,
+            },
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 14),
+              Icon(
+                Icons.search_outlined,
+                color: theme.colorScheme.onSecondaryContainer,
+                semanticLabel: '搜索',
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Obx(
+                  () => Text(
+                    _homeController.defaultSearch.value,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.outline),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 5),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget defaultUser({
+  required ThemeData theme,
+  required VoidCallback onPressed,
+}) {
+  return SizedBox(
+    width: 38,
+    height: 38,
+    child: IconButton(
+      tooltip: '默认用户头像',
+      style: ButtonStyle(
+        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+        backgroundColor: WidgetStatePropertyAll(
+          theme.colorScheme.onInverseSurface,
+        ),
+      ),
+      onPressed: onPressed,
+      icon: Icon(
+        Icons.person_rounded,
+        size: 22,
+        color: theme.colorScheme.primary,
+      ),
+    ),
+  );
+}
+
+Widget msgBadge(MainController mainController) {
+  void toWhisper() {
+    mainController.msgUnReadCount.value = '';
+    mainController.lastCheckUnreadAt = DateTime.now().millisecondsSinceEpoch;
+    Get.toNamed('/whisper');
+  }
+
+  final msgUnReadCount = mainController.msgUnReadCount.value;
+  return GestureDetector(
+    onTap: toWhisper,
+    child: Badge(
+      isLabelVisible:
+          mainController.msgBadgeMode != DynamicBadgeMode.hidden &&
+          msgUnReadCount.isNotEmpty,
+      alignment: mainController.msgBadgeMode == DynamicBadgeMode.number
+          ? const Alignment(0, -0.5)
+          : const Alignment(0.5, -0.5),
+      label:
+          mainController.msgBadgeMode == DynamicBadgeMode.number &&
+              msgUnReadCount.isNotEmpty
+          ? Text(msgUnReadCount)
+          : null,
+      child: IconButton(
+        tooltip: '消息',
+        onPressed: toWhisper,
+        icon: const Icon(
+          Icons.notifications_none,
+        ),
+      ),
+    ),
+  );
 }

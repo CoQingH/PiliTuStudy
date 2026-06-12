@@ -1,4 +1,4 @@
-import 'package:PiliPlus/utils/storage_pref.dart';
+import 'package:pilistudy/utils/storage_pref.dart';
 
 class ContentFilter {
   static const List<String> _genderKeywords = [

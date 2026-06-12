@@ -1,8 +1,8 @@
-import 'package:PiliPlus/http/init.dart';
-import 'package:PiliPlus/http/search.dart';
-import 'package:PiliPlus/utils/accounts/account.dart';
-import 'package:PiliPlus/utils/id_utils.dart';
-import 'package:PiliPlus/utils/page_utils.dart';
+import 'package:pilistudy/http/init.dart';
+import 'package:pilistudy/http/search.dart';
+import 'package:pilistudy/utils/accounts/account.dart';
+import 'package:pilistudy/utils/id_utils.dart';
+import 'package:pilistudy/utils/page_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';

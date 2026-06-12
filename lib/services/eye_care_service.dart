@@ -4,7 +4,7 @@
 /// 默认: 每 20 分钟暂停 20 秒。
 
 import 'dart:async';
-import 'package:PiliPlus/utils/storage_pref.dart';
+import 'package:pilistudy/utils/storage_pref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 

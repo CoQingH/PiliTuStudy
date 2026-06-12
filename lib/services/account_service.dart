@@ -1,5 +1,5 @@
-import 'package:PiliPlus/models/user/info.dart';
-import 'package:PiliPlus/utils/storage_pref.dart';
+import 'package:pilistudy/models/user/info.dart';
+import 'package:pilistudy/utils/storage_pref.dart';
 import 'package:get/get.dart';
 
 class AccountService extends GetxService {

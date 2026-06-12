@@ -1,11 +1,11 @@
-import 'package:PiliPlus/common/constants.dart';
-import 'package:PiliPlus/models_new/live/live_room_info_h5/data.dart';
-import 'package:PiliPlus/models_new/pgc/pgc_info_model/episode.dart';
-import 'package:PiliPlus/models_new/video/video_detail/data.dart';
-import 'package:PiliPlus/models_new/video/video_detail/page.dart';
-import 'package:PiliPlus/plugin/pl_player/controller.dart';
-import 'package:PiliPlus/plugin/pl_player/models/play_status.dart';
-import 'package:PiliPlus/utils/storage_pref.dart';
+import 'package:pilistudy/common/constants.dart';
+import 'package:pilistudy/models_new/live/live_room_info_h5/data.dart';
+import 'package:pilistudy/models_new/pgc/pgc_info_model/episode.dart';
+import 'package:pilistudy/models_new/video/video_detail/data.dart';
+import 'package:pilistudy/models_new/video/video_detail/page.dart';
+import 'package:pilistudy/plugin/pl_player/controller.dart';
+import 'package:pilistudy/plugin/pl_player/models/play_status.dart';
+import 'package:pilistudy/utils/storage_pref.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:get/get_utils/get_utils.dart';
 

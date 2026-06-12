@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pilistudy/app/theme.dart';
-import 'package:pilistudy/pages/home/view.dart';
+import 'package:pilistudy/pages/home/youtube_home.dart';
 import 'package:pilistudy/pages/search/view.dart';
 import 'package:pilistudy/pages/library/view.dart';
 import 'package:pilistudy/pages/setting/view.dart';
@@ -20,13 +20,19 @@ void main() {
   runApp(const StudyTubeApp());
 }
 
+// compatibility alias for pages referencing MyApp
+typedef MyApp = StudyTubeApp;
+
 class StudyTubeApp extends StatelessWidget {
   const StudyTubeApp({super.key});
+
+  /// Compatibility: original pages expect MyApp.darkThemeData
+  static ThemeData? darkThemeData;
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'StudyTube',
+      title: 'PiliTuStudy',
       debugShowCheckedModeBanner: false,
       theme: YTTheme.darkTheme,
       darkTheme: YTTheme.darkTheme,
@@ -47,7 +53,7 @@ class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
   static const _pages = <Widget>[
-    HomePage(),
+    YoutubeHomePage(),
     SearchPage(),
     LibraryPage(),
     SettingPage(),

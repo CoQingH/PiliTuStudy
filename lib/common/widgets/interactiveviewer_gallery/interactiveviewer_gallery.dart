@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:PiliPlus/common/widgets/interactiveviewer_gallery/interactive_viewer_boundary.dart';
-import 'package:PiliPlus/models/common/image_preview_type.dart';
-import 'package:PiliPlus/utils/extension.dart';
-import 'package:PiliPlus/utils/image_utils.dart';
-import 'package:PiliPlus/utils/page_utils.dart';
-import 'package:PiliPlus/utils/storage_pref.dart';
-import 'package:PiliPlus/utils/utils.dart';
+import 'package:pilistudy/common/widgets/interactiveviewer_gallery/interactive_viewer_boundary.dart';
+import 'package:pilistudy/models/common/image_preview_type.dart';
+import 'package:pilistudy/utils/extension.dart';
+import 'package:pilistudy/utils/image_utils.dart';
+import 'package:pilistudy/utils/page_utils.dart';
+import 'package:pilistudy/utils/storage_pref.dart';
+import 'package:pilistudy/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';

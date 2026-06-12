@@ -1,4 +1,4 @@
-import 'package:PiliPlus/models/dynamics/result.dart';
+import 'package:pilistudy/models/dynamics/result.dart';
 
 class TopicCardItem {
   DynamicItemModel? dynamicCardItem;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studytube/app/theme.dart';
+import 'package:pilistudy/app/theme.dart';
 
 class LibraryPage extends StatelessWidget {
   const LibraryPage({super.key});

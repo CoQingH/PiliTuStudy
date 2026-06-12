@@ -1,5 +1,5 @@
-import 'package:PiliPlus/http/api.dart';
-import 'package:PiliPlus/http/init.dart';
+import 'package:pilistudy/http/api.dart';
+import 'package:pilistudy/http/init.dart';
 
 class CommonHttp {
   static Future unReadDynamic() async {

@@ -1,4 +1,4 @@
-import 'package:PiliPlus/models_new/fans/list.dart';
+import 'package:pilistudy/models_new/fans/list.dart';
 
 class FansData {
   List<FansItemModel>? list;

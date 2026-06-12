@@ -1,7 +1,7 @@
-import 'package:PiliPlus/pages/fav/article/view.dart';
-import 'package:PiliPlus/pages/fav/cheese/view.dart';
-import 'package:PiliPlus/pages/fav/note/view.dart';
-import 'package:PiliPlus/pages/fav/video/view.dart';
+import 'package:pilistudy/pages/fav/article/view.dart';
+import 'package:pilistudy/pages/fav/cheese/view.dart';
+import 'package:pilistudy/pages/fav/note/view.dart';
+import 'package:pilistudy/pages/fav/video/view.dart';
 import 'package:flutter/material.dart';
 
 enum FavTabType {

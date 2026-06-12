@@ -1,4 +1,4 @@
-import 'package:PiliPlus/models_new/space/space/color_config.dart';
+import 'package:pilistudy/models_new/space/space/color_config.dart';
 
 class Draw {
   int? drawType;

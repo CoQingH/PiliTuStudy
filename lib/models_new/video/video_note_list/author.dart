@@ -1,4 +1,4 @@
-import 'package:PiliPlus/models/model_avatar.dart';
+import 'package:pilistudy/models/model_avatar.dart';
 
 class Author {
   int? mid;

@@ -1,8 +1,8 @@
-import 'package:PiliPlus/models/common/video/cdn_type.dart';
-import 'package:PiliPlus/models/video/play/url.dart';
-import 'package:PiliPlus/models_new/live/live_room_play_info/codec.dart';
-import 'package:PiliPlus/utils/extension.dart';
-import 'package:PiliPlus/utils/storage_pref.dart';
+import 'package:pilistudy/models/common/video/cdn_type.dart';
+import 'package:pilistudy/models/video/play/url.dart';
+import 'package:pilistudy/models_new/live/live_room_play_info/codec.dart';
+import 'package:pilistudy/utils/extension.dart';
+import 'package:pilistudy/utils/storage_pref.dart';
 
 class VideoUtils {
   static String cdnService = Pref.defaultCDNService;

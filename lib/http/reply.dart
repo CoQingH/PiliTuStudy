@@ -1,13 +1,13 @@
-import 'package:PiliPlus/common/constants.dart';
-import 'package:PiliPlus/http/api.dart';
-import 'package:PiliPlus/http/init.dart';
-import 'package:PiliPlus/http/loading_state.dart';
-import 'package:PiliPlus/models_new/emote/data.dart';
-import 'package:PiliPlus/models_new/emote/package.dart';
-import 'package:PiliPlus/models_new/reply/data.dart';
-import 'package:PiliPlus/models_new/reply2reply/data.dart';
-import 'package:PiliPlus/utils/accounts.dart';
-import 'package:PiliPlus/utils/accounts/account.dart';
+import 'package:pilistudy/common/constants.dart';
+import 'package:pilistudy/http/api.dart';
+import 'package:pilistudy/http/init.dart';
+import 'package:pilistudy/http/loading_state.dart';
+import 'package:pilistudy/models_new/emote/data.dart';
+import 'package:pilistudy/models_new/emote/package.dart';
+import 'package:pilistudy/models_new/reply/data.dart';
+import 'package:pilistudy/models_new/reply2reply/data.dart';
+import 'package:pilistudy/utils/accounts.dart';
+import 'package:pilistudy/utils/accounts/account.dart';
 import 'package:dio/dio.dart';
 
 class ReplyHttp {

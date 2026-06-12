@@ -1,4 +1,4 @@
-import 'package:PiliPlus/utils/extension.dart';
+import 'package:pilistudy/utils/extension.dart';
 
 class SimpleVoteInfo {
   int? choiceCnt;

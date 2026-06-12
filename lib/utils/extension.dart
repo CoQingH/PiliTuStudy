@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:PiliPlus/common/widgets/dialog/dialog.dart';
-import 'package:PiliPlus/grpc/bilibili/app/im/v1.pb.dart' show ThreeDotItem;
-import 'package:PiliPlus/grpc/bilibili/app/im/v1.pbenum.dart'
+import 'package:pilistudy/common/widgets/dialog/dialog.dart';
+import 'package:pilistudy/grpc/bilibili/app/im/v1.pb.dart' show ThreeDotItem;
+import 'package:pilistudy/grpc/bilibili/app/im/v1.pbenum.dart'
     show IMSettingType, ThreeDotItemType;
-import 'package:PiliPlus/pages/common/common_whisper_controller.dart';
-import 'package:PiliPlus/pages/contact/view.dart';
-import 'package:PiliPlus/pages/whisper_settings/view.dart';
-import 'package:PiliPlus/utils/app_scheme.dart';
+import 'package:pilistudy/pages/common/common_whisper_controller.dart';
+import 'package:pilistudy/pages/contact/view.dart';
+import 'package:pilistudy/pages/whisper_settings/view.dart';
+import 'package:pilistudy/utils/app_scheme.dart';
 import 'package:floating/floating.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';

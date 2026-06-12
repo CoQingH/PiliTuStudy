@@ -1,4 +1,4 @@
-import 'package:PiliPlus/utils/accounts.dart';
+import 'package:pilistudy/utils/accounts.dart';
 
 class DanmakuHttp {
   static Future shootDanmaku({

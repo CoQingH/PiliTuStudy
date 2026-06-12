@@ -1,5 +1,5 @@
-import 'package:PiliPlus/common/skeleton/skeleton.dart';
-import 'package:PiliPlus/utils/utils.dart';
+import 'package:pilistudy/common/skeleton/skeleton.dart';
+import 'package:pilistudy/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class SpaceOpusSkeleton extends StatelessWidget {

@@ -1,8 +1,8 @@
-import 'package:PiliPlus/models_new/upower_rank/level_info.dart';
-import 'package:PiliPlus/models_new/upower_rank/rank_info.dart';
-import 'package:PiliPlus/models_new/upower_rank/up_info.dart';
-import 'package:PiliPlus/models_new/upower_rank/user_info.dart';
-import 'package:PiliPlus/utils/extension.dart';
+import 'package:pilistudy/models_new/upower_rank/level_info.dart';
+import 'package:pilistudy/models_new/upower_rank/rank_info.dart';
+import 'package:pilistudy/models_new/upower_rank/up_info.dart';
+import 'package:pilistudy/models_new/upower_rank/user_info.dart';
+import 'package:pilistudy/utils/extension.dart';
 
 class UpowerRankData {
   UpInfo? upInfo;

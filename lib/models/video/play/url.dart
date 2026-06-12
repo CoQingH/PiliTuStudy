@@ -1,6 +1,6 @@
-import 'package:PiliPlus/models/common/video/audio_quality.dart';
-import 'package:PiliPlus/models/common/video/video_quality.dart';
-import 'package:PiliPlus/utils/extension.dart';
+import 'package:pilistudy/models/common/video/audio_quality.dart';
+import 'package:pilistudy/models/common/video/video_quality.dart';
+import 'package:pilistudy/utils/extension.dart';
 
 class PlayUrlModel {
   PlayUrlModel({

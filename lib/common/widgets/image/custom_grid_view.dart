@@ -17,15 +17,15 @@
 
 import 'dart:math' show min;
 
-import 'package:PiliPlus/common/constants.dart';
-import 'package:PiliPlus/common/widgets/badge.dart';
-import 'package:PiliPlus/common/widgets/custom_layout.dart';
-import 'package:PiliPlus/common/widgets/image/network_img_layer.dart';
-import 'package:PiliPlus/models/common/badge_type.dart';
-import 'package:PiliPlus/models/common/image_preview_type.dart';
-import 'package:PiliPlus/utils/extension.dart';
-import 'package:PiliPlus/utils/page_utils.dart';
-import 'package:PiliPlus/utils/storage_pref.dart';
+import 'package:pilistudy/common/constants.dart';
+import 'package:pilistudy/common/widgets/badge.dart';
+import 'package:pilistudy/common/widgets/custom_layout.dart';
+import 'package:pilistudy/common/widgets/image/network_img_layer.dart';
+import 'package:pilistudy/models/common/badge_type.dart';
+import 'package:pilistudy/models/common/image_preview_type.dart';
+import 'package:pilistudy/utils/extension.dart';
+import 'package:pilistudy/utils/page_utils.dart';
+import 'package:pilistudy/utils/storage_pref.dart';
 import 'package:flutter/material.dart'
     hide CustomMultiChildLayout, MultiChildLayoutDelegate;
 

@@ -1,4 +1,4 @@
-import 'package:PiliPlus/models_new/space/space/nft.dart';
+import 'package:pilistudy/models_new/space/space/nft.dart';
 
 class NftShowModule {
   int? total;

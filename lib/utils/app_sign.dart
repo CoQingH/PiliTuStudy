@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:PiliPlus/common/constants.dart';
+import 'package:pilistudy/common/constants.dart';
 import 'package:crypto/crypto.dart';
 
 class AppSign {

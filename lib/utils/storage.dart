@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:PiliPlus/models/model_owner.dart';
-import 'package:PiliPlus/models/user/danmaku_rule_adapter.dart';
-import 'package:PiliPlus/models/user/info.dart';
-import 'package:PiliPlus/utils/accounts.dart';
-import 'package:PiliPlus/utils/accounts/account_adapter.dart';
-import 'package:PiliPlus/utils/accounts/account_type_adapter.dart';
-import 'package:PiliPlus/utils/accounts/cookie_jar_adapter.dart';
-import 'package:PiliPlus/utils/set_int_adapter.dart';
+import 'package:pilistudy/models/model_owner.dart';
+import 'package:pilistudy/models/user/danmaku_rule_adapter.dart';
+import 'package:pilistudy/models/user/info.dart';
+import 'package:pilistudy/utils/accounts.dart';
+import 'package:pilistudy/utils/accounts/account_adapter.dart';
+import 'package:pilistudy/utils/accounts/account_type_adapter.dart';
+import 'package:pilistudy/utils/accounts/cookie_jar_adapter.dart';
+import 'package:pilistudy/utils/set_int_adapter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 

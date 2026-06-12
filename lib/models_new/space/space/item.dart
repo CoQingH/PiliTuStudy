@@ -1,4 +1,4 @@
-import 'package:PiliPlus/models_new/space/space/badge.dart';
+import 'package:pilistudy/models_new/space/space/badge.dart';
 
 class Item {
   String? title;

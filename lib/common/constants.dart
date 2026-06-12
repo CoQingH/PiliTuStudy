@@ -1,4 +1,4 @@
-import 'package:PiliPlus/http/constants.dart';
+import 'package:pilistudy/http/constants.dart';
 import 'package:flutter/material.dart';
 
 class StyleString {

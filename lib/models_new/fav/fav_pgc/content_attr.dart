@@ -1,4 +1,4 @@
-import 'package:PiliPlus/models_new/fav/fav_pgc/multi_img.dart';
+import 'package:pilistudy/models_new/fav/fav_pgc/multi_img.dart';
 
 class ContentAttr {
   String? text;

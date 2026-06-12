@@ -4,8 +4,8 @@
 /// - 每日观看时长上限（分钟）
 /// - 每日观看视频数上限
 /// - 收藏夹豁免（在指定收藏夹中观看不计入）
-import 'package:PiliPlus/utils/storage_pref.dart';
-import 'package:PiliPlus/utils/watch_time_tracker.dart';
+import 'package:pilistudy/utils/storage_pref.dart';
+import 'package:pilistudy/utils/watch_time_tracker.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class UsageLimitService {

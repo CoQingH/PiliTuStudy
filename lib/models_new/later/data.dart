@@ -1,4 +1,4 @@
-import 'package:PiliPlus/models_new/later/list.dart';
+import 'package:pilistudy/models_new/later/list.dart';
 
 class LaterData {
   int? count;

@@ -1,7 +1,7 @@
-import 'package:PiliPlus/http/api.dart';
-import 'package:PiliPlus/http/init.dart';
-import 'package:PiliPlus/http/loading_state.dart';
-import 'package:PiliPlus/models_new/fans/data.dart';
+import 'package:pilistudy/http/api.dart';
+import 'package:pilistudy/http/init.dart';
+import 'package:pilistudy/http/loading_state.dart';
+import 'package:pilistudy/models_new/fans/data.dart';
 
 class FanHttp {
   static Future<LoadingState<FansData>> fans({

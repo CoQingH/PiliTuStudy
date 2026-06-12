@@ -13,7 +13,7 @@ library;
 
 import 'dart:math' as math;
 
-import 'package:PiliPlus/common/widgets/dyn/ink_well.dart';
+import 'package:pilistudy/common/widgets/dyn/ink_well.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide InkWell;
 import 'package:flutter/rendering.dart';
