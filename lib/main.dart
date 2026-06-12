@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pilistudy/app/theme.dart';
 import 'package:pilistudy/pages/home/youtube_home.dart';
-import 'package:pilistudy/pages/search/view.dart';
+import 'package:pilistudy/pages/search/youtube_search.dart';
 import 'package:pilistudy/pages/library/view.dart';
-import 'package:pilistudy/pages/setting/view.dart';
+import 'package:pilistudy/pages/setting/youtube_setting.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,9 +54,9 @@ class _MainShellState extends State<MainShell> {
 
   static const _pages = <Widget>[
     YoutubeHomePage(),
-    SearchPage(),
+    YoutubeSearchPage(),
     LibraryPage(),
-    SettingPage(),
+    YoutubeSettingPage(),
   ];
 
   @override

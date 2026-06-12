@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pilistudy/app/theme.dart';
+import 'package:pilistudy/services/usage_limit_service.dart';
+import 'package:pilistudy/utils/watch_time_tracker.dart';
 
 class YoutubeHomePage extends StatelessWidget {
   const YoutubeHomePage({super.key});
@@ -112,11 +114,19 @@ class _Chip extends StatelessWidget {
 class _DailyStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    WatchTimeTracker.checkReset();
+    final status = usageLimitService.statusText;
+    final isNear = (usageLimitService.remainingTimeMinutes() > 0 && usageLimitService.remainingTimeMinutes() <= 30) ||
+        (usageLimitService.remainingVideoCount() > 0 && usageLimitService.remainingVideoCount() <= 3);
+
+    if (status.isEmpty) return const SizedBox.shrink();
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: YTTheme.surfaceLight,
+        color: isNear ? YTTheme.red.withValues(alpha: 0.1) : YTTheme.surfaceLight,
         borderRadius: BorderRadius.circular(12),
+        border: isNear ? Border.all(color: YTTheme.red.withValues(alpha: 0.3)) : null,
       ),
       child: Row(
         children: [
@@ -126,20 +136,22 @@ class _DailyStatusCard extends StatelessWidget {
               color: YTTheme.red.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.timer_outlined, color: YTTheme.red, size: 22),
+            child: Icon(isNear ? Icons.hourglass_bottom : Icons.timer_outlined, color: isNear ? Colors.orange : YTTheme.red, size: 22),
           ),
           const SizedBox(width: 14),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('今日学习', style: TextStyle(fontSize: 12, color: YTTheme.textSecondary)),
-              SizedBox(height: 3),
-              Text('0min / 60min  |  0/10个',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: YTTheme.textPrimary)),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('今日', style: TextStyle(fontSize: 12, color: YTTheme.textSecondary)),
+                const SizedBox(height: 3),
+                Text(status,
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700,
+                    color: isNear ? Colors.orange : YTTheme.textPrimary)),
+              ],
+            ),
           ),
-          const Spacer(),
-          Icon(Icons.chevron_right, color: YTTheme.textTertiary, size: 22),
+          const Icon(Icons.chevron_right, color: YTTheme.textTertiary, size: 22),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pilistudy/app/theme.dart';
 
 class LibraryPage extends StatelessWidget {
@@ -22,7 +23,7 @@ class LibraryPage extends StatelessWidget {
           _LibraryTile(
             icon: Icons.history,
             title: '观看历史',
-            onTap: () {},
+            onTap: () => Get.toNamed('/history'),
           ),
           _LibraryTile(
             icon: Icons.bookmark_outline,
@@ -32,7 +33,7 @@ class LibraryPage extends StatelessWidget {
           _LibraryTile(
             icon: Icons.watch_later_outlined,
             title: '稍后再看',
-            onTap: () {},
+            onTap: () => Get.toNamed('/later'),
           ),
           _LibraryTile(
             icon: Icons.thumb_up_outlined,
