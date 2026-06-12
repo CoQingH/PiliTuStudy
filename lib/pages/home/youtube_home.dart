@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pilistudy/app/theme.dart';
 import 'package:pilistudy/services/usage_limit_service.dart';
+import 'package:pilistudy/utils/storage_pref.dart';
 import 'package:pilistudy/utils/watch_time_tracker.dart';
 
 class YoutubeHomePage extends StatelessWidget {
@@ -65,15 +66,18 @@ class YoutubeHomePage extends StatelessWidget {
           _DailyStatusCard(),
           const SizedBox(height: 24),
           // Quick actions
-          const Text('快捷入口', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: YTTheme.textSecondary)),
-          const SizedBox(height: 10),
-          Row(children: [
-            _QuickAction(icon: Icons.subscriptions_outlined, label: '关注动态', onTap: () => Get.toNamed('/dynamics')),
-            const SizedBox(width: 10),
-            _QuickAction(icon: Icons.history, label: '历史记录', onTap: () => Get.toNamed('/history')),
-            const SizedBox(width: 10),
-            _QuickAction(icon: Icons.watch_later_outlined, label: '稍后再看', onTap: () => Get.toNamed('/later')),
-          ]),
+          Builder(builder: (context) {
+            final items = <Widget>[];
+            if (Pref.showHomeSubscriptions) items.add(_QuickAction(icon: Icons.subscriptions_outlined, label: '关注动态', onTap: () => Get.toNamed('/dynamics')));
+            if (Pref.showHomeHistory) items.add(_QuickAction(icon: Icons.history, label: '历史记录', onTap: () => Get.toNamed('/history')));
+            if (Pref.showHomeWatchLater) items.add(_QuickAction(icon: Icons.watch_later_outlined, label: '稍后再看', onTap: () => Get.toNamed('/later')));
+            if (items.isEmpty) return const SizedBox.shrink();
+            return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('快捷入口', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: YTTheme.textSecondary)),
+              const SizedBox(height: 10),
+              Row(children: items.map((w) => Expanded(child: w)).expand((w) => [w, const SizedBox(width: 10)]).toList()..removeLast()),
+            ]);
+          }),
           const SizedBox(height: 32),
           // Empty feed
           Center(

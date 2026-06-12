@@ -270,6 +270,13 @@ abstract class Pref {
   static bool get enableSearchKeywordBlock =>
       _setting.get(SettingBoxKey.enableSearchKeywordBlock, defaultValue: false);
 
+  static bool get showHomeSubscriptions =>
+      _setting.get(SettingBoxKey.showHomeSubscriptions, defaultValue: true);
+  static bool get showHomeHistory =>
+      _setting.get(SettingBoxKey.showHomeHistory, defaultValue: true);
+  static bool get showHomeWatchLater =>
+      _setting.get(SettingBoxKey.showHomeWatchLater, defaultValue: true);
+
   static int get dailyTimeLimitMinutes =>
       _setting.get(SettingBoxKey.dailyTimeLimitMinutes, defaultValue: 0);
 
