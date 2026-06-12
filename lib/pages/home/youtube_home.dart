@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pilistudy/app/theme.dart';
 import 'package:pilistudy/services/usage_limit_service.dart';
 import 'package:pilistudy/utils/watch_time_tracker.dart';
@@ -63,17 +64,28 @@ class YoutubeHomePage extends StatelessWidget {
           const SizedBox(height: 16),
           _DailyStatusCard(),
           const SizedBox(height: 24),
-          // Empty feed state
+          // Quick actions
+          const Text('快捷入口', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: YTTheme.textSecondary)),
+          const SizedBox(height: 10),
+          Row(children: [
+            _QuickAction(icon: Icons.subscriptions_outlined, label: '关注动态', onTap: () => Get.toNamed('/dynamics')),
+            const SizedBox(width: 10),
+            _QuickAction(icon: Icons.history, label: '历史记录', onTap: () => Get.toNamed('/history')),
+            const SizedBox(width: 10),
+            _QuickAction(icon: Icons.watch_later_outlined, label: '稍后再看', onTap: () => Get.toNamed('/later')),
+          ]),
+          const SizedBox(height: 32),
+          // Empty feed
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 80),
+              padding: const EdgeInsets.symmetric(vertical: 40),
               child: Column(
                 children: [
-                  Icon(Icons.auto_awesome, size: 56, color: YTTheme.textTertiary.withValues(alpha: 0.4)),
-                  const SizedBox(height: 16),
-                  const Text('推荐流已关闭', style: TextStyle(fontSize: 17, color: YTTheme.textSecondary)),
-                  const SizedBox(height: 6),
-                  const Text('主动搜索 = 主动学习', style: TextStyle(fontSize: 13, color: YTTheme.textTertiary)),
+                  Icon(Icons.auto_awesome, size: 48, color: YTTheme.textTertiary.withValues(alpha: 0.3)),
+                  const SizedBox(height: 12),
+                  const Text('推荐流已关闭', style: TextStyle(fontSize: 15, color: YTTheme.textSecondary)),
+                  const SizedBox(height: 4),
+                  const Text('上面是主动获取，下面是被动投喂', style: TextStyle(fontSize: 12, color: YTTheme.textTertiary)),
                 ],
               ),
             ),
@@ -106,6 +118,29 @@ class _Chip extends StatelessWidget {
         ),
         side: BorderSide.none,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+  }
+}
+
+class _QuickAction extends StatelessWidget {
+  final IconData icon; final String label; final VoidCallback onTap;
+  const _QuickAction({required this.icon, required this.label, required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(color: YTTheme.surfaceLight, borderRadius: BorderRadius.circular(10)),
+          child: Column(children: [
+            Icon(icon, color: YTTheme.textPrimary, size: 24),
+            const SizedBox(height: 6),
+            Text(label, style: const TextStyle(fontSize: 12, color: YTTheme.textSecondary)),
+          ]),
+        ),
       ),
     );
   }
