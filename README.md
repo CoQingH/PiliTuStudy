@@ -1,39 +1,41 @@
 # PiliTuStudy
 
-YouTube-style BiliBili client — knowledge focused, anti-addiction.
+YouTube 风格的 B站客户端。核心目标：**不沉迷，主动获取知识**。
 
-## Design
+## 设计
 
-Red/black dark theme. Bottom navigation: Home / Search / Library / Settings.
-No recommendation algorithm feed — search-first, active learning.
+红黑暗色主题，底部四栏导航（首页/搜索/媒体库/设置）。
+没有推荐算法投喂，只有主动搜索和关注动态。
 
-## Anti-Addiction System
+## 反沉迷体系
 
-| Feature | Description |
-|---------|-------------|
-| Study Mode | One-tap: knowledge zone whitelist + disable recs + clean playback |
-| Knowledge Mode | Whitelist-filter recs/hot/rank to educational zones only |
-| Recommendation Kill Switch | Hide rcmd/hot/rank tabs entirely |
-| Daily Time Limit | 0–60 min, with 24h cooldown on increase |
-| Daily Video Limit | 0–15 videos, with 24h cooldown on increase |
-| Favorite Exemption | Watching in exempted folders doesn't count toward limits |
-| Eye Care | 20-20-20 rule — auto-pause every N min for M sec |
-| Search Blocking | Content filter keywords block active search queries |
-| Global Comment Off | Force-hide all comments app-wide |
-| Global Danmaku Off | Force-hide all danmaku app-wide |
-| NSFW Filter | 100+ softcore/ASMR/dance/livestream/cosplay keywords |
-| Gender Filter | 40+ gender conflict keywords |
-| Political Filter | 90+ sensitive keywords |
+**学习模式** — 一键开启：知识分区白名单 + 关闭推荐流 + 关弹幕 + 隐藏评论 + 隐藏相关视频
 
-## Build
+**知识模式** — 推荐/热门/排行榜仅保留指定分区（知识/科技/数码/编程/数学/物理），可自定义
+
+**关闭推荐流** — 首页直接隐藏推荐/热门/排行榜，算法彻底切断
+
+**每日限额** — 时长上限 0–60min，视频数上限 0–15 个。上调需 24h 冷却，下调不受限
+
+**收藏夹豁免** — 指定收藏夹中观看不计入每日限额
+
+**护眼提醒** — 连续播放 N 分钟后自动暂停 M 秒，弹出休息倒计时。默认 20min/20s
+
+**搜索拦截** — 屏蔽词同时覆盖主动搜索，搜敏感词直接拦截
+
+**全局关评论** — 所有视频强制隐藏评论区
+
+**全局关弹幕** — 所有视频强制隐藏弹幕
+
+**内容过滤** — NSFW 100+ 词 / 性别对立 40+ 词 / 政治敏感 90+ 词
+
+## 编译
 
 ```bash
 flutter pub get
 flutter build apk --release
 ```
 
-## Credits
+## 致谢
 
-Backend modules (API, models, player, gRPC) adapted from [PiliPlus](https://github.com/ZnnnnnH2/PiliPlus-personal).
-
-Co-Authored-By: Claude <noreply@anthropic.com>
+后端模块（API、数据模型、播放器、gRPC）源自 [PiliPlus](https://github.com/ZnnnnnH2/PiliPlus-personal)。
