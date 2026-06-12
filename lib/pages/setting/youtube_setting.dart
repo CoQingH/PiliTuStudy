@@ -19,9 +19,9 @@ class _YoutubeSettingPageState extends State<YoutubeSettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: YTTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: YTTheme.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: const Text('设置', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22)),
       ),
       body: ListView(
@@ -61,13 +61,13 @@ class _YoutubeSettingPageState extends State<YoutubeSettingPage> {
 }
 
 class _Sec extends StatelessWidget { final String t; const _Sec(this.t);
-  @override Widget build(c) => Padding(padding: const EdgeInsets.fromLTRB(12,20,12,4), child: Text(t, style: const TextStyle(fontSize:13,fontWeight:FontWeight.w600,color:YTTheme.textTertiary,letterSpacing:0.5))); }
+  @override Widget build(c) => Padding(padding: const EdgeInsets.fromLTRB(12,20,12,4), child: Text(t, style: TextStyle(fontSize:13,fontWeight:FontWeight.w600,color:Theme.of(c).textTheme.bodySmall!.color,letterSpacing:0.5))); }
 
 class _Sw extends StatelessWidget { final IconData icon; final String title, subtitle; final bool value; final ValueChanged<bool> onChanged;
   const _Sw({required this.icon, required this.title, this.subtitle='', required this.value, required this.onChanged});
-  @override Widget build(c) => ListTile(leading:Icon(icon,color:YTTheme.textPrimary,size:22), title:Text(title,style:const TextStyle(fontSize:15,color:YTTheme.textPrimary)), subtitle: subtitle.isNotEmpty?Text(subtitle,style:const TextStyle(fontSize:12,color:YTTheme.textTertiary)):null, trailing:Switch(value:value,onChanged:onChanged,activeColor:YTTheme.red), shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12))); }
+  @override Widget build(c) { final t1=Theme.of(c).colorScheme.onSurface; final t3=Theme.of(c).textTheme.bodySmall!.color; return ListTile(leading:Icon(icon,color:t1,size:22), title:Text(title,style:TextStyle(fontSize:15,color:t1)), subtitle: subtitle.isNotEmpty?Text(subtitle,style:TextStyle(fontSize:12,color:t3)):null, trailing:Switch(value:value,onChanged:onChanged,activeColor:YTTheme.red), shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12))); }}
 
 class _Sel extends StatelessWidget { final IconData icon; final String title; final int cur; final List<int> opts; final List<String> labs; final ValueChanged<int> onSel;
   const _Sel({required this.icon, required this.title, required this.cur, required this.opts, required this.labs, required this.onSel});
   String get val => labs[opts.indexOf(cur)];
-  @override Widget build(c) => ListTile(leading:Icon(icon,color:YTTheme.textPrimary,size:22), title:Text(title,style:const TextStyle(fontSize:15,color:YTTheme.textPrimary)), trailing:Row(mainAxisSize:MainAxisSize.min,children:[Text(val,style:const TextStyle(fontSize:14,color:YTTheme.textSecondary)),const SizedBox(width:4),const Icon(Icons.chevron_right,color:YTTheme.textTertiary,size:20)]), onTap:()=>showModalBottomSheet(context:c,backgroundColor:YTTheme.surface,shape:const RoundedRectangleBorder(borderRadius:BorderRadius.vertical(top:Radius.circular(16))),builder:(_)=>ListView(shrinkWrap:true,children:List.generate(opts.length,(i)=>ListTile(title:Text(labs[i],style:TextStyle(color:opts[i]==cur?YTTheme.red:YTTheme.textPrimary,fontWeight:opts[i]==cur?FontWeight.w600:FontWeight.normal)),trailing:opts[i]==cur?const Icon(Icons.check,color:YTTheme.red):null,onTap:(){Navigator.pop(c);onSel(opts[i]);})))), shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12))); }
+  @override Widget build(c) { final t1=Theme.of(c).colorScheme.onSurface; final t2=Theme.of(c).colorScheme.outline; final t3=Theme.of(c).textTheme.bodySmall!.color; final surf=Theme.of(c).colorScheme.surface; return ListTile(leading:Icon(icon,color:t1,size:22), title:Text(title,style:TextStyle(fontSize:15,color:t1)), trailing:Row(mainAxisSize:MainAxisSize.min,children:[Text(val,style:TextStyle(fontSize:14,color:t2)),const SizedBox(width:4),Icon(Icons.chevron_right,color:t3,size:20)]), onTap:()=>showModalBottomSheet(context:c,backgroundColor:surf,shape:const RoundedRectangleBorder(borderRadius:BorderRadius.vertical(top:Radius.circular(16))),builder:(_)=>ListView(shrinkWrap:true,children:List.generate(opts.length,(i)=>ListTile(title:Text(labs[i],style:TextStyle(color:opts[i]==cur?YTTheme.red:t1,fontWeight:opts[i]==cur?FontWeight.w600:FontWeight.normal)),trailing:opts[i]==cur?const Icon(Icons.check,color:YTTheme.red):null,onTap:(){Navigator.pop(c);onSel(opts[i]);})))), shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12))); }}

@@ -20,8 +20,6 @@ class _YoutubeHomePageState extends State<YoutubeHomePage> {
   @override
   void dispose() { _tick?.cancel(); super.dispose(); }
 
-  void _searchChip(String kw) => Get.toNamed('/searchResult', parameters: {'tag': 'home', 'keyword': kw});
-
   @override
   Widget build(BuildContext context) {
     final t1 = context.ytT1; final t2 = context.ytT2; final t3 = context.ytT3;
@@ -41,15 +39,6 @@ class _YoutubeHomePageState extends State<YoutubeHomePage> {
       ),
       body: ListView(padding: const EdgeInsets.symmetric(horizontal: 12), children: [
         const SizedBox(height: 8),
-        SizedBox(height: 40, child: ListView(scrollDirection: Axis.horizontal, children: [
-          _Chip(label: '知识', color: t1, onTap: () => _searchChip('知识')),
-          _Chip(label: '科技', color: t1, onTap: () => _searchChip('科技')),
-          _Chip(label: '编程', color: t1, onTap: () => _searchChip('编程')),
-          _Chip(label: '数学', color: t1, onTap: () => _searchChip('数学')),
-          _Chip(label: '数码', color: t1, onTap: () => _searchChip('数码')),
-          _Chip(label: '物理', color: t1, onTap: () => _searchChip('物理')),
-        ])),
-        const SizedBox(height: 16),
         _StatusCard(),
         const SizedBox(height: 24),
         Builder(builder: (ctx) {
@@ -77,22 +66,6 @@ class _YoutubeHomePageState extends State<YoutubeHomePage> {
   }
 }
 
-class _Chip extends StatelessWidget {
-  final String label; final Color color; final VoidCallback onTap;
-  const _Chip({required this.label, required this.color, required this.onTap});
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(right: 8),
-    child: ActionChip(
-      label: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w500, fontSize: 13)),
-      onPressed: onTap,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      side: BorderSide.none,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-    ),
-  );
-}
-
 class _QuickAction extends StatelessWidget {
   final IconData icon; final String label; final VoidCallback onTap; final Color t1, t2, surf;
   const _QuickAction({required this.icon, required this.label, required this.onTap, required this.t1, required this.t2, required this.surf});
@@ -116,8 +89,8 @@ class _StatusCard extends StatelessWidget {
     final timeLimit = Pref.dailyTimeLimitMinutes;
     final countLimit = Pref.dailyVideoCountLimit;
     final count = WatchTimeTracker.todayVideoCount;
-    final isNear = (timeLimit > 0 && secs >= (timeLimit * 60 * 0.8)) || (countLimit > 0 && count >= (countLimit * 0.8));
     final over = (timeLimit > 0 && secs >= timeLimit * 60) || (countLimit > 0 && count >= countLimit);
+    final isNear = !over && ((timeLimit > 0 && secs >= (timeLimit * 60 * 0.8)) || (countLimit > 0 && count >= (countLimit * 0.8)));
 
     final parts = <String>[];
     if (timeLimit > 0) parts.add('${today} / ${timeLimit}min');
@@ -125,22 +98,31 @@ class _StatusCard extends StatelessWidget {
     if (parts.isEmpty && secs == 0) parts.add('今天还没开始学习');
     if (parts.isEmpty) parts.add('今日: $today');
 
+    final pct = timeLimit > 0 ? (secs / (timeLimit * 60)).clamp(0.0, 1.0) : 0.0;
+    final barColor = over ? YTTheme.red : isNear ? Colors.orange : YTTheme.red;
+
     return Container(padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: over ? YTTheme.red.withValues(alpha: 0.12) : isNear ? Colors.orange.withValues(alpha: 0.1) : context.ytSurf,
         borderRadius: BorderRadius.circular(12),
         border: over ? Border.all(color: YTTheme.red.withValues(alpha: 0.4)) : isNear ? Border.all(color: Colors.orange.withValues(alpha: 0.3)) : null,
       ),
-      child: Row(children: [
-        Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: YTTheme.red.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
-          child: Icon(over ? Icons.block : isNear ? Icons.hourglass_bottom : Icons.timer_outlined, color: over ? YTTheme.red : isNear ? Colors.orange : YTTheme.red, size: 22)),
-        const SizedBox(width: 14),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('今日学习', style: TextStyle(fontSize: 12, color: t2)),
-          const SizedBox(height: 3),
-          Text(parts.join('  |  '), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: over ? YTTheme.red : isNear ? Colors.orange : t1)),
-        ])),
-        Icon(Icons.chevron_right, color: t3, size: 22),
+      child: Column(children: [
+        Row(children: [
+          Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: YTTheme.red.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+            child: Icon(over ? Icons.block : isNear ? Icons.hourglass_bottom : Icons.timer_outlined, color: barColor, size: 22)),
+          const SizedBox(width: 14),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('今日学习', style: TextStyle(fontSize: 12, color: t2)),
+            const SizedBox(height: 3),
+            Text(parts.join('  |  '), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: over ? YTTheme.red : isNear ? Colors.orange : t1)),
+          ])),
+          Icon(Icons.chevron_right, color: t3, size: 22),
+        ]),
+        if (timeLimit > 0) ...[
+          const SizedBox(height: 12),
+          ClipRRect(borderRadius: BorderRadius.circular(4), child: LinearProgressIndicator(value: pct, minHeight: 6, backgroundColor: context.ytSurf.withValues(alpha: 0.5), valueColor: AlwaysStoppedAnimation(barColor))),
+        ],
       ]),
     );
   }
