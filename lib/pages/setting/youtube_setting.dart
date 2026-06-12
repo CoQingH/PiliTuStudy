@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pilistudy/app/theme.dart';
 import 'package:pilistudy/utils/storage.dart';
 import 'package:pilistudy/utils/storage_key.dart';
-
-typedef Box = dynamic;
+import 'package:hive/hive.dart';
 
 class YoutubeSettingPage extends StatefulWidget {
   const YoutubeSettingPage({super.key});
@@ -33,8 +32,8 @@ class _YoutubeSettingPageState extends State<YoutubeSettingPage> {
             subtitle: '一键：知识分区 + 关推荐 + 纯净播放',
             value: _get(SettingBoxKey.enableStudyMode, false),
             onChanged: (v) { _set(SettingBoxKey.enableStudyMode, v); if (v) { GStorage.setting..put(SettingBoxKey.enableKnowledgeMode, true)..put(SettingBoxKey.disableRcmdFeed, true)..put(SettingBoxKey.enableShowDanmaku, false)..put(SettingBoxKey.alwaysExapndIntroPanel, true)..put(SettingBoxKey.showRelatedVideo, false)..put(SettingBoxKey.defaultShowComment, false); } }),
-          _Sw(icon: Icons.visibility_off_outlined, title: '关闭全部推荐流', subtitle: '首页隐藏推荐/热门/排行榜', value: _get(SettingBoxKey.disableRcmdFeed, false), onChanged: (v) => _set(SettingBoxKey.disableRcmdFeed, v)),
-          _Sw(icon: Icons.filter_list_outlined, title: '知识模式', subtitle: '推荐仅保留白名单分区', value: _get(SettingBoxKey.enableKnowledgeMode, false), onChanged: (v) => _set(SettingBoxKey.enableKnowledgeMode, v)),
+          _Sw(icon: Icons.visibility_off_outlined, title: '关闭全部推荐流', subtitle: '首页隐藏推荐/热门/排行榜（需重启）', value: _get(SettingBoxKey.disableRcmdFeed, false), onChanged: (v) { _set(SettingBoxKey.disableRcmdFeed, v); ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('已生效，重启 app 后刷新首页布局'), duration: Duration(seconds: 2))); }),
+          _Sw(icon: Icons.filter_list_outlined, title: '知识模式', subtitle: '推荐仅保留白名单分区（需重启）', value: _get(SettingBoxKey.enableKnowledgeMode, false), onChanged: (v) { _set(SettingBoxKey.enableKnowledgeMode, v); ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('已生效，重启 app 后刷新推荐流'), duration: Duration(seconds: 2))); }),
           const _Sec('每日限额'),
           _Sel(icon: Icons.timer_outlined, title: '每日时长上限', cur: _getInt(SettingBoxKey.dailyTimeLimitMinutes, 0), opts: const [0,15,30,45,60], labs: const ['不限','15min','30min','45min','60min'], onSel: (v) => _set(SettingBoxKey.dailyTimeLimitMinutes, v)),
           _Sel(icon: Icons.videocam_outlined, title: '每日视频数上限', cur: _getInt(SettingBoxKey.dailyVideoCountLimit, 0), opts: const [0,3,5,8,10,15], labs: const ['不限','3个','5个','8个','10个','15个'], onSel: (v) => _set(SettingBoxKey.dailyVideoCountLimit, v)),

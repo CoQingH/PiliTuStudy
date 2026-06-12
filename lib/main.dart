@@ -79,9 +79,9 @@ class StudyTubeApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'PiliTuStudy',
       debugShowCheckedModeBanner: false,
-      theme: YTTheme.darkTheme,
-      darkTheme: YTTheme.darkTheme,
-      themeMode: ThemeMode.dark,
+      theme: YTTheme.light,
+      darkTheme: YTTheme.dark,
+      themeMode: ThemeMode.system,
       getPages: Routes.getPages,
       home: const MainShell(),
     );

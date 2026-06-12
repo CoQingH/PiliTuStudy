@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pilistudy/app/theme.dart';
@@ -5,194 +6,142 @@ import 'package:pilistudy/services/usage_limit_service.dart';
 import 'package:pilistudy/utils/storage_pref.dart';
 import 'package:pilistudy/utils/watch_time_tracker.dart';
 
-class YoutubeHomePage extends StatelessWidget {
+class YoutubeHomePage extends StatefulWidget {
   const YoutubeHomePage({super.key});
+  @override
+  State<YoutubeHomePage> createState() => _YoutubeHomePageState();
+}
+
+class _YoutubeHomePageState extends State<YoutubeHomePage> {
+  Timer? _tick;
+
+  @override
+  void initState() { super.initState(); _tick = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() {}); }); }
+  @override
+  void dispose() { _tick?.cancel(); super.dispose(); }
+
+  void _searchChip(String kw) => Get.toNamed('/searchResult', parameters: {'tag': 'home', 'keyword': kw});
 
   @override
   Widget build(BuildContext context) {
+    final t1 = context.ytT1; final t2 = context.ytT2; final t3 = context.ytT3;
     return Scaffold(
-      backgroundColor: YTTheme.background,
+      backgroundColor: context.ytBg,
       appBar: AppBar(
-        backgroundColor: YTTheme.background,
-        title: Row(
-          children: [
-            Container(
-              width: 28, height: 28,
-              decoration: BoxDecoration(
-                color: YTTheme.red,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.play_arrow, color: Colors.white, size: 20),
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              'PiliTuStudy',
-              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -0.5),
-            ),
-          ],
-        ),
+        backgroundColor: context.ytBg,
+        title: Row(children: [
+          Container(width: 28, height: 28, decoration: BoxDecoration(color: YTTheme.red, borderRadius: BorderRadius.circular(6)), child: const Icon(Icons.play_arrow, color: Colors.white, size: 20)),
+          const SizedBox(width: 8),
+          Text('PiliTuStudy', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -0.5, color: t1)),
+        ]),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.cast, color: YTTheme.textPrimary, size: 22),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: YTTheme.textPrimary, size: 22),
-            onPressed: () {},
-          ),
+          IconButton(icon: Icon(Icons.account_circle_outlined, color: t1, size: 24), tooltip: '登录/个人', onPressed: () => Get.toNamed('/login')),
           const SizedBox(width: 4),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        children: [
-          const SizedBox(height: 8),
-          // Category chips
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: const [
-                _Chip(label: '全部'),
-                _Chip(label: '知识', selected: true),
-                _Chip(label: '科技'),
-                _Chip(label: '编程'),
-                _Chip(label: '数学'),
-                _Chip(label: '数码'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          _DailyStatusCard(),
-          const SizedBox(height: 24),
-          // Quick actions
-          Builder(builder: (context) {
-            final items = <Widget>[];
-            if (Pref.showHomeSubscriptions) items.add(_QuickAction(icon: Icons.subscriptions_outlined, label: '关注动态', onTap: () => Get.toNamed('/dynamics')));
-            if (Pref.showHomeHistory) items.add(_QuickAction(icon: Icons.history, label: '历史记录', onTap: () => Get.toNamed('/history')));
-            if (Pref.showHomeWatchLater) items.add(_QuickAction(icon: Icons.watch_later_outlined, label: '稍后再看', onTap: () => Get.toNamed('/later')));
-            if (items.isEmpty) return const SizedBox.shrink();
-            return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('快捷入口', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: YTTheme.textSecondary)),
-              const SizedBox(height: 10),
-              Row(children: items.map((w) => Expanded(child: w)).expand((w) => [w, const SizedBox(width: 10)]).toList()..removeLast()),
-            ]);
-          }),
-          const SizedBox(height: 32),
-          // Empty feed
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40),
-              child: Column(
-                children: [
-                  Icon(Icons.auto_awesome, size: 48, color: YTTheme.textTertiary.withValues(alpha: 0.3)),
-                  const SizedBox(height: 12),
-                  const Text('推荐流已关闭', style: TextStyle(fontSize: 15, color: YTTheme.textSecondary)),
-                  const SizedBox(height: 4),
-                  const Text('上面是主动获取，下面是被动投喂', style: TextStyle(fontSize: 12, color: YTTheme.textTertiary)),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+      body: ListView(padding: const EdgeInsets.symmetric(horizontal: 12), children: [
+        const SizedBox(height: 8),
+        SizedBox(height: 40, child: ListView(scrollDirection: Axis.horizontal, children: [
+          _Chip(label: '知识', color: t1, onTap: () => _searchChip('知识')),
+          _Chip(label: '科技', color: t1, onTap: () => _searchChip('科技')),
+          _Chip(label: '编程', color: t1, onTap: () => _searchChip('编程')),
+          _Chip(label: '数学', color: t1, onTap: () => _searchChip('数学')),
+          _Chip(label: '数码', color: t1, onTap: () => _searchChip('数码')),
+          _Chip(label: '物理', color: t1, onTap: () => _searchChip('物理')),
+        ])),
+        const SizedBox(height: 16),
+        _StatusCard(),
+        const SizedBox(height: 24),
+        Builder(builder: (ctx) {
+          final items = <Widget>[];
+          if (Pref.showHomeSubscriptions) items.add(_QuickAction(icon: Icons.subscriptions_outlined, label: '关注动态', onTap: () => Get.toNamed('/dynamics'), t1: t1, t2: t2, surf: context.ytSurf));
+          if (Pref.showHomeHistory) items.add(_QuickAction(icon: Icons.history, label: '历史记录', onTap: () => Get.toNamed('/history'), t1: t1, t2: t2, surf: context.ytSurf));
+          if (Pref.showHomeWatchLater) items.add(_QuickAction(icon: Icons.watch_later_outlined, label: '稍后再看', onTap: () => Get.toNamed('/later'), t1: t1, t2: t2, surf: context.ytSurf));
+          if (items.isEmpty) return const SizedBox.shrink();
+          return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('快捷入口', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: t2)),
+            const SizedBox(height: 10),
+            Row(children: items.map((w) => Expanded(child: w)).expand((w) => [w, const SizedBox(width: 10)]).toList()..removeLast()),
+          ]);
+        }),
+        const SizedBox(height: 32),
+        Center(child: Padding(padding: const EdgeInsets.symmetric(vertical: 40), child: Column(children: [
+          Icon(Icons.auto_awesome, size: 48, color: t3.withValues(alpha: 0.3)),
+          const SizedBox(height: 12),
+          Text('推荐流已关闭', style: TextStyle(fontSize: 15, color: t2)),
+          const SizedBox(height: 4),
+          Text('上面点分类芯片直接搜索', style: TextStyle(fontSize: 12, color: t3)),
+        ]))),
+      ]),
     );
   }
 }
 
 class _Chip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  const _Chip({required this.label, this.selected = false});
-
+  final String label; final Color color; final VoidCallback onTap;
+  const _Chip({required this.label, required this.color, required this.onTap});
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: ChoiceChip(
-        label: Text(label),
-        selected: selected,
-        onSelected: (_) {},
-        selectedColor: YTTheme.chipSelected,
-        backgroundColor: YTTheme.chipBg,
-        labelStyle: TextStyle(
-          color: selected ? YTTheme.background : YTTheme.textPrimary,
-          fontWeight: FontWeight.w500,
-          fontSize: 13,
-        ),
-        side: BorderSide.none,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(right: 8),
+    child: ActionChip(
+      label: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w500, fontSize: 13)),
+      onPressed: onTap,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      side: BorderSide.none,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+  );
 }
 
 class _QuickAction extends StatelessWidget {
-  final IconData icon; final String label; final VoidCallback onTap;
-  const _QuickAction({required this.icon, required this.label, required this.onTap});
+  final IconData icon; final String label; final VoidCallback onTap; final Color t1, t2, surf;
+  const _QuickAction({required this.icon, required this.label, required this.onTap, required this.t1, required this.t2, required this.surf});
   @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(color: YTTheme.surfaceLight, borderRadius: BorderRadius.circular(10)),
-          child: Column(children: [
-            Icon(icon, color: YTTheme.textPrimary, size: 24),
-            const SizedBox(height: 6),
-            Text(label, style: const TextStyle(fontSize: 12, color: YTTheme.textSecondary)),
-          ]),
-        ),
+  Widget build(BuildContext context) => Expanded(
+    child: InkWell(onTap: onTap, borderRadius: BorderRadius.circular(10),
+      child: Container(padding: const EdgeInsets.symmetric(vertical: 16), decoration: BoxDecoration(color: surf, borderRadius: BorderRadius.circular(10)),
+        child: Column(children: [Icon(icon, color: t1, size: 24), const SizedBox(height: 6), Text(label, style: TextStyle(fontSize: 12, color: t2))]),
       ),
-    );
-  }
+    ),
+  );
 }
 
-class _DailyStatusCard extends StatelessWidget {
+class _StatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WatchTimeTracker.checkReset();
-    final status = usageLimitService.statusText;
-    final isNear = (usageLimitService.remainingTimeMinutes() > 0 && usageLimitService.remainingTimeMinutes() <= 30) ||
-        (usageLimitService.remainingVideoCount() > 0 && usageLimitService.remainingVideoCount() <= 3);
+    final t1 = context.ytT1; final t2 = context.ytT2; final t3 = context.ytT3;
+    final today = WatchTimeTracker.todayFormatted;
+    final secs = WatchTimeTracker.todaySeconds;
+    final timeLimit = Pref.dailyTimeLimitMinutes;
+    final countLimit = Pref.dailyVideoCountLimit;
+    final count = WatchTimeTracker.todayVideoCount;
+    final isNear = (timeLimit > 0 && secs >= (timeLimit * 60 * 0.8)) || (countLimit > 0 && count >= (countLimit * 0.8));
+    final over = (timeLimit > 0 && secs >= timeLimit * 60) || (countLimit > 0 && count >= countLimit);
 
-    if (status.isEmpty) return const SizedBox.shrink();
+    final parts = <String>[];
+    if (timeLimit > 0) parts.add('${today} / ${timeLimit}min');
+    if (countLimit > 0) parts.add('$count / $countLimit 个');
+    if (parts.isEmpty && secs == 0) parts.add('今天还没开始学习');
+    if (parts.isEmpty) parts.add('今日: $today');
 
-    return Container(
-      padding: const EdgeInsets.all(16),
+    return Container(padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isNear ? YTTheme.red.withValues(alpha: 0.1) : YTTheme.surfaceLight,
+        color: over ? YTTheme.red.withValues(alpha: 0.12) : isNear ? Colors.orange.withValues(alpha: 0.1) : context.ytSurf,
         borderRadius: BorderRadius.circular(12),
-        border: isNear ? Border.all(color: YTTheme.red.withValues(alpha: 0.3)) : null,
+        border: over ? Border.all(color: YTTheme.red.withValues(alpha: 0.4)) : isNear ? Border.all(color: Colors.orange.withValues(alpha: 0.3)) : null,
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: YTTheme.red.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(isNear ? Icons.hourglass_bottom : Icons.timer_outlined, color: isNear ? Colors.orange : YTTheme.red, size: 22),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('今日', style: TextStyle(fontSize: 12, color: YTTheme.textSecondary)),
-                const SizedBox(height: 3),
-                Text(status,
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700,
-                    color: isNear ? Colors.orange : YTTheme.textPrimary)),
-              ],
-            ),
-          ),
-          const Icon(Icons.chevron_right, color: YTTheme.textTertiary, size: 22),
-        ],
-      ),
+      child: Row(children: [
+        Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: YTTheme.red.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+          child: Icon(over ? Icons.block : isNear ? Icons.hourglass_bottom : Icons.timer_outlined, color: over ? YTTheme.red : isNear ? Colors.orange : YTTheme.red, size: 22)),
+        const SizedBox(width: 14),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('今日学习', style: TextStyle(fontSize: 12, color: t2)),
+          const SizedBox(height: 3),
+          Text(parts.join('  |  '), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: over ? YTTheme.red : isNear ? Colors.orange : t1)),
+        ])),
+        Icon(Icons.chevron_right, color: t3, size: 22),
+      ]),
     );
   }
 }
