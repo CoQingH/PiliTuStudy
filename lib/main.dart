@@ -12,6 +12,7 @@ import 'package:pilistudy/pages/library/view.dart';
 import 'package:pilistudy/pages/setting/youtube_setting.dart';
 import 'package:pilistudy/router/app_pages.dart';
 import 'package:pilistudy/services/account_service.dart';
+import 'package:pilistudy/services/service_locator.dart';
 import 'package:pilistudy/utils/app_scheme.dart';
 import 'package:pilistudy/utils/cache_manage.dart';
 import 'package:pilistudy/utils/page_utils.dart';
@@ -30,11 +31,14 @@ void main() async {
 
   await Future.wait([
     CacheManage.autoClearCache(),
-    if (Utils.isMobile) SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      if (Pref.horizontalScreen) DeviceOrientation.landscapeLeft,
-      if (Pref.horizontalScreen) DeviceOrientation.landscapeRight,
-    ]),
+    if (Utils.isMobile) ...[
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        if (Pref.horizontalScreen) DeviceOrientation.landscapeLeft,
+        if (Pref.horizontalScreen) DeviceOrientation.landscapeRight,
+      ]),
+      setupServiceLocator(),
+    ],
   ]);
 
   Request();
