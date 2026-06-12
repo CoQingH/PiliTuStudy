@@ -28,7 +28,7 @@ class LibraryPage extends StatelessWidget {
           _LibraryTile(
             icon: Icons.bookmark_outline,
             title: '收藏夹',
-            onTap: () {},
+            onTap: () => Get.toNamed('/fav'),
           ),
           _LibraryTile(
             icon: Icons.watch_later_outlined,
