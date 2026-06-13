@@ -4,6 +4,8 @@ import 'package:pilistudy/http/fav.dart';
 import 'package:pilistudy/utils/accounts.dart';
 import 'package:pilistudy/utils/storage.dart';
 import 'package:pilistudy/utils/storage_key.dart';
+import 'package:pilistudy/models/common/theme/theme_type.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -39,9 +41,11 @@ class _YoutubeSettingPageState extends State<YoutubeSettingPage> {
             onChanged: (v) { _set(SettingBoxKey.enableStudyMode, v); if (v) { GStorage.setting..put(SettingBoxKey.enableKnowledgeMode, true)..put(SettingBoxKey.disableRcmdFeed, true)..put(SettingBoxKey.enableShowDanmaku, false)..put(SettingBoxKey.alwaysExapndIntroPanel, true)..put(SettingBoxKey.showRelatedVideo, false)..put(SettingBoxKey.defaultShowComment, false); } }),
           _Sw(icon: Icons.visibility_off_outlined, title: '关闭全部推荐流', subtitle: '首页隐藏推荐/热门/排行榜（需重启）', value: _get(SettingBoxKey.disableRcmdFeed, false), onChanged: (v) { _set(SettingBoxKey.disableRcmdFeed, v); ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('已生效，重启 app 后刷新首页布局'), duration: Duration(seconds: 2))); }),
           _Sw(icon: Icons.filter_list_outlined, title: '知识模式', subtitle: '推荐仅保留白名单分区（需重启）', value: _get(SettingBoxKey.enableKnowledgeMode, false), onChanged: (v) { _set(SettingBoxKey.enableKnowledgeMode, v); ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('已生效，重启 app 后刷新推荐流'), duration: Duration(seconds: 2))); }),
+          const _Sec('外观'),
+          _Sel(icon: Icons.brightness_6_outlined, title: '主题模式', cur: GStorage.setting.get(SettingBoxKey.themeMode, defaultValue: ThemeType.system.index), opts: const [0, 1, 2], labs: const ['浅色', '深色', '跟随系统'], onSel: (v) { _set(SettingBoxKey.themeMode, v); Get.changeThemeMode(ThemeType.values[v].toThemeMode); }),
           const _Sec('每日限额'),
-          _Sel(icon: Icons.timer_outlined, title: '每日时长上限', cur: _getInt(SettingBoxKey.dailyTimeLimitMinutes, 0), opts: const [0,15,30,45,60], labs: const ['不限','15min','30min','45min','60min'], onSel: (v) => _set(SettingBoxKey.dailyTimeLimitMinutes, v)),
-          _Sel(icon: Icons.videocam_outlined, title: '每日视频数上限', cur: _getInt(SettingBoxKey.dailyVideoCountLimit, 0), opts: const [0,3,5,8,10,15], labs: const ['不限','3个','5个','8个','10个','15个'], onSel: (v) => _set(SettingBoxKey.dailyVideoCountLimit, v)),
+          _Sel(icon: Icons.timer_outlined, title: '每日时长上限', cur: () { final v = _getInt(SettingBoxKey.dailyTimeLimitMinutes, 30); return const [15,30,45,60,90].contains(v) ? v : 30; }(), opts: const [15,30,45,60,90], labs: const ['15min','30min','45min','60min','90min'], onSel: (v) => _set(SettingBoxKey.dailyTimeLimitMinutes, v)),
+          _Sel(icon: Icons.videocam_outlined, title: '每日视频数上限', cur: () { final v = _getInt(SettingBoxKey.dailyVideoCountLimit, 5); return const [3,5,8,10,15].contains(v) ? v : 5; }(), opts: const [3,5,8,10,15], labs: const ['3个','5个','8个','10个','15个'], onSel: (v) => _set(SettingBoxKey.dailyVideoCountLimit, v)),
           _FavExempt(cur: _getExempt()),
           const _Sec('护眼'),
           _Sw(icon: Icons.remove_red_eye_outlined, title: '护眼提醒', subtitle: '连续播放后强制休息', value: _get(SettingBoxKey.enableEyeCare, false), onChanged: (v) => _set(SettingBoxKey.enableEyeCare, v)),

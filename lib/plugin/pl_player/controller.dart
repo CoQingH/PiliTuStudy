@@ -1501,7 +1501,6 @@ class PlPlayerController {
     // 累积观看时长与视频计数（通过限额服务）
     final watchedSeconds = _position.value.inSeconds;
     if (watchedSeconds > 0) {
-      WatchTimeTracker.checkReset();
       usageLimitService.recordWatch(watchedSeconds);
     }
     eyeCareService.onPlaybackStopped();

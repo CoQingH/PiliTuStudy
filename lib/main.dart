@@ -81,7 +81,7 @@ class StudyTubeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: YTTheme.light,
       darkTheme: YTTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: Pref.themeMode,
       getPages: Routes.getPages,
       home: const MainShell(),
     );

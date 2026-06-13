@@ -3,17 +3,19 @@ import 'package:pilistudy/utils/storage_key.dart';
 
 class WatchTimeTracker {
   static int get todaySeconds {
+    checkReset();
     final data = _read();
     return data['seconds'] as int? ?? 0;
   }
 
   static int get todayVideoCount {
+    checkReset();
     final data = _read();
     return data['videoCount'] as int? ?? 0;
   }
 
   static String get todayFormatted {
-    final s = todaySeconds;
+    final s = todaySeconds; // checkReset() called inside todaySeconds
     if (s < 60) return '${s}s';
     final m = s ~/ 60;
     if (m < 60) return '${m}min';
@@ -25,6 +27,7 @@ class WatchTimeTracker {
   /// 累加观看秒数（播放结束时调用）
   static void addSeconds(int seconds) {
     if (seconds <= 0) return;
+    checkReset();
     final data = _read();
     final prev = data['seconds'] as int? ?? 0;
     GStorage.localCache.put(LocalCacheKey.dailyWatchTime, {
@@ -36,6 +39,7 @@ class WatchTimeTracker {
 
   /// 累加视频计数（播放结束时调用）
   static void incrementVideoCount() {
+    checkReset();
     final data = _read();
     final prev = data['videoCount'] as int? ?? 0;
     GStorage.localCache.put(LocalCacheKey.dailyWatchTime, {

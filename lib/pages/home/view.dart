@@ -9,7 +9,6 @@ import 'package:pilistudy/pages/mine/controller.dart';
 import 'package:pilistudy/services/usage_limit_service.dart';
 import 'package:pilistudy/utils/extension.dart';
 import 'package:pilistudy/utils/feed_back.dart';
-import 'package:pilistudy/utils/watch_time_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide ContextExtensionss;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -33,7 +32,6 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     final theme = Theme.of(context);
-    WatchTimeTracker.checkReset();
     final statusText = usageLimitService.statusText;
     final timeRemaining = usageLimitService.remainingTimeMinutes();
     final countRemaining = usageLimitService.remainingVideoCount();

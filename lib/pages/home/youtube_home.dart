@@ -2,23 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pilistudy/app/theme.dart';
-import 'package:pilistudy/services/usage_limit_service.dart';
 import 'package:pilistudy/utils/storage_pref.dart';
 import 'package:pilistudy/utils/watch_time_tracker.dart';
 
-class YoutubeHomePage extends StatefulWidget {
+class YoutubeHomePage extends StatelessWidget {
   const YoutubeHomePage({super.key});
-  @override
-  State<YoutubeHomePage> createState() => _YoutubeHomePageState();
-}
-
-class _YoutubeHomePageState extends State<YoutubeHomePage> {
-  Timer? _tick;
-
-  @override
-  void initState() { super.initState(); _tick = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() {}); }); }
-  @override
-  void dispose() { _tick?.cancel(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +27,7 @@ class _YoutubeHomePageState extends State<YoutubeHomePage> {
       ),
       body: ListView(padding: const EdgeInsets.symmetric(horizontal: 12), children: [
         const SizedBox(height: 8),
-        _StatusCard(),
+        const _StatusCard(),
         const SizedBox(height: 24),
         Builder(builder: (ctx) {
           final items = <Widget>[];
@@ -79,27 +67,64 @@ class _QuickAction extends StatelessWidget {
   );
 }
 
-class _StatusCard extends StatelessWidget {
+/// 状态卡 — 自带 1s 定时器，只重建自己不影响整页
+class _StatusCard extends StatefulWidget {
+  const _StatusCard();
+  @override
+  State<_StatusCard> createState() => _StatusCardState();
+}
+
+class _StatusCardState extends State<_StatusCard> {
+  Timer? _tick;
+
+  @override
+  void initState() { super.initState(); _tick = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() {}); }); }
+  @override
+  void dispose() { _tick?.cancel(); super.dispose(); }
+
   @override
   Widget build(BuildContext context) {
-    WatchTimeTracker.checkReset();
+    // checkReset() 已内置在 todaySeconds/todayFormatted 等 getter 中，无需额外调用
     final t1 = context.ytT1; final t2 = context.ytT2; final t3 = context.ytT3;
     final today = WatchTimeTracker.todayFormatted;
     final secs = WatchTimeTracker.todaySeconds;
     final timeLimit = Pref.dailyTimeLimitMinutes;
     final countLimit = Pref.dailyVideoCountLimit;
     final count = WatchTimeTracker.todayVideoCount;
+
     final over = (timeLimit > 0 && secs >= timeLimit * 60) || (countLimit > 0 && count >= countLimit);
     final isNear = !over && ((timeLimit > 0 && secs >= (timeLimit * 60 * 0.8)) || (countLimit > 0 && count >= (countLimit * 0.8)));
+    // 正常→绿色  接近→橙色  超限→红色
+    final barColor = over ? YTTheme.red : isNear ? Colors.orange : const Color(0xFF4CAF50);
 
+    // 已用 / 总额
     final parts = <String>[];
-    if (timeLimit > 0) parts.add('${today} / ${timeLimit}min');
+    if (timeLimit > 0) parts.add('$today / ${timeLimit}min');
     if (countLimit > 0) parts.add('$count / $countLimit 个');
-    if (parts.isEmpty && secs == 0) parts.add('今天还没开始学习');
-    if (parts.isEmpty) parts.add('今日: $today');
+    if (parts.isEmpty) parts.add('今天还没开始学习');
+
+    // 剩余额度
+    String? remainingText;
+    if (!over) {
+      final rem = <String>[];
+      if (timeLimit > 0) {
+        final rm = timeLimit * 60 - secs;
+        final rmin = rm > 0 ? (rm ~/ 60) : 0;
+        final rsec = rm > 0 ? (rm % 60) : 0;
+        if (rmin > 0) {
+          rem.add(rsec > 0 ? '剩 ${rmin}min${rsec}s' : '剩 ${rmin}min');
+        } else {
+          rem.add('剩 ${rsec}s');
+        }
+      }
+      if (countLimit > 0) {
+        final rc = countLimit - count;
+        rem.add('剩 ${rc}个');
+      }
+      if (rem.isNotEmpty) remainingText = rem.join('  ');
+    }
 
     final pct = timeLimit > 0 ? (secs / (timeLimit * 60)).clamp(0.0, 1.0) : 0.0;
-    final barColor = over ? YTTheme.red : isNear ? Colors.orange : YTTheme.red;
 
     return Container(padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -109,13 +134,17 @@ class _StatusCard extends StatelessWidget {
       ),
       child: Column(children: [
         Row(children: [
-          Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: YTTheme.red.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+          Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: barColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
             child: Icon(over ? Icons.block : isNear ? Icons.hourglass_bottom : Icons.timer_outlined, color: barColor, size: 22)),
           const SizedBox(width: 14),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('今日学习', style: TextStyle(fontSize: 12, color: t2)),
             const SizedBox(height: 3),
             Text(parts.join('  |  '), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: over ? YTTheme.red : isNear ? Colors.orange : t1)),
+            if (remainingText != null) ...[
+              const SizedBox(height: 2),
+              Text(remainingText, style: TextStyle(fontSize: 12, color: t3)),
+            ],
           ])),
           Icon(Icons.chevron_right, color: t3, size: 22),
         ]),

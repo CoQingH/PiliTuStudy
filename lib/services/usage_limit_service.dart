@@ -26,30 +26,18 @@ class UsageLimitService {
   void resetExemption() => _isExempted = false;
 
   /// 检查是否超出每日时长限制
-  /// 返回 true 表示已超限
-  bool isTimeExceeded() {
-    final limit = Pref.dailyTimeLimitMinutes;
-    if (limit <= 0) return false;
-    final todayMin = WatchTimeTracker.todaySeconds ~/ 60;
-    return todayMin >= limit;
-  }
+  bool isTimeExceeded() =>
+      (WatchTimeTracker.todaySeconds ~/ 60) >= Pref.dailyTimeLimitMinutes;
 
   /// 检查是否超出每日视频数限制
-  /// 返回 true 表示已超限
-  bool isCountExceeded() {
-    final limit = Pref.dailyVideoCountLimit;
-    if (limit <= 0) return false;
-    return WatchTimeTracker.todayVideoCount >= limit;
-  }
+  bool isCountExceeded() =>
+      WatchTimeTracker.todayVideoCount >= Pref.dailyVideoCountLimit;
 
   /// 综合检查是否超限
   bool isAnyLimitExceeded() => isTimeExceeded() || isCountExceeded();
 
   /// 在播放前调用，返回 false 表示被拦截
   bool canPlay() {
-    WatchTimeTracker.checkReset();
-
-    // 已在豁免收藏夹中，放行
     if (_isExempted) return true;
 
     if (isTimeExceeded()) {
@@ -74,27 +62,22 @@ class UsageLimitService {
     WatchTimeTracker.incrementVideoCount();
   }
 
-  /// 剩余时长（分钟），-1 表示无限制
+  /// 剩余时长（分钟）
   int remainingTimeMinutes() {
-    final limit = Pref.dailyTimeLimitMinutes;
-    if (limit <= 0) return -1;
     final used = WatchTimeTracker.todaySeconds ~/ 60;
-    final remaining = limit - used;
+    final remaining = Pref.dailyTimeLimitMinutes - used;
     return remaining < 0 ? 0 : remaining;
   }
 
-  /// 剩余视频数，-1 表示无限制
+  /// 剩余视频数
   int remainingVideoCount() {
-    final limit = Pref.dailyVideoCountLimit;
-    if (limit <= 0) return -1;
-    final remaining = limit - WatchTimeTracker.todayVideoCount;
+    final remaining = Pref.dailyVideoCountLimit - WatchTimeTracker.todayVideoCount;
     return remaining < 0 ? 0 : remaining;
   }
 
   /// 格式化的剩余时长字符串
   String remainingTimeFormatted() {
     final remaining = remainingTimeMinutes();
-    if (remaining < 0) return '';
     if (remaining >= 60) {
       final h = remaining ~/ 60;
       final m = remaining % 60;
@@ -103,28 +86,9 @@ class UsageLimitService {
     return '${remaining}min';
   }
 
-  /// 用于首页/播放器显示的汇总文本
+  /// 用于播放器顶部显示的汇总文本
   String get statusText {
-    final parts = <String>[];
-    final timeLimit = Pref.dailyTimeLimitMinutes;
-    final countLimit = Pref.dailyVideoCountLimit;
-
-    if (timeLimit > 0) {
-      parts.add('${WatchTimeTracker.todayFormatted}/${timeLimit}min');
-    }
-    if (countLimit > 0) {
-      parts.add('${WatchTimeTracker.todayVideoCount}/$countLimit个');
-    }
-
-    if (parts.isEmpty) {
-      // 未设置任何限制时仅显示今日观看时间
-      final s = WatchTimeTracker.todaySeconds;
-      if (s > 0) {
-        return '今日观看: ${WatchTimeTracker.todayFormatted}';
-      }
-    }
-
-    return parts.join(' | ');
+    return '${WatchTimeTracker.todayFormatted}/${Pref.dailyTimeLimitMinutes}min  |  ${WatchTimeTracker.todayVideoCount}/${Pref.dailyVideoCountLimit}个';
   }
 }
 

@@ -278,10 +278,10 @@ abstract class Pref {
       _setting.get(SettingBoxKey.showHomeWatchLater, defaultValue: true);
 
   static int get dailyTimeLimitMinutes =>
-      _setting.get(SettingBoxKey.dailyTimeLimitMinutes, defaultValue: 0);
+      _setting.get(SettingBoxKey.dailyTimeLimitMinutes, defaultValue: 30);
 
   static int get dailyVideoCountLimit =>
-      _setting.get(SettingBoxKey.dailyVideoCountLimit, defaultValue: 0);
+      _setting.get(SettingBoxKey.dailyVideoCountLimit, defaultValue: 5);
 
   static List<int> get exemptFavFoldersForLimit {
     final raw = _setting.get(SettingBoxKey.exemptFavFoldersForLimit, defaultValue: <int>[]);
