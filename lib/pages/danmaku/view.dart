@@ -51,7 +51,11 @@ class _PlDanmakuState extends State<PlDanmaku> {
     }
     playerController
       ..addStatusLister(playerListener)
-      ..addPositionListener(videoPositionListen);
+      ..addPositionListener(videoPositionListen)
+      ..onDanmakuFiltersChanged = () {
+        _plDanmakuController.clearCache();
+        _controller?.clear();
+      };
   }
 
   @override

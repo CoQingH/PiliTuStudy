@@ -26,6 +26,12 @@ class PlDanmakuController {
     requestedSeg.clear();
   }
 
+  /// 清空已缓存弹幕（屏蔽规则变更后调用，强制重取）
+  void clearCache() {
+    dmSegMap.clear();
+    requestedSeg.clear();
+  }
+
   int calcSegment(int progress) {
     return progress ~/ segmentLength;
   }

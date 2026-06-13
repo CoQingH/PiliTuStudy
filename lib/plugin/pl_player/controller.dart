@@ -268,6 +268,8 @@ class PlPlayerController {
   /// 弹幕权重
   late int danmakuWeight = Pref.danmakuWeight;
   late RuleFilter filters = Pref.danmakuFilterRule;
+  /// 弹幕屏蔽规则变更回调 — 触发时清空已缓存弹幕以重新过滤
+  VoidCallback? onDanmakuFiltersChanged;
   // 关联弹幕控制器
   DanmakuController? danmakuController;
   bool showDanmaku = true;

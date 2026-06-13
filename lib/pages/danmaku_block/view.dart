@@ -36,6 +36,9 @@ class _DanmakuBlockPageState extends State<DanmakuBlockPage> {
     final ruleFilter = RuleFilter.fromRuleTypeEntires(_controller.rules);
     plPlayerController.filters = ruleFilter;
     GStorage.localCache.put(LocalCacheKey.danmakuFilterRules, ruleFilter);
+    // 清空已渲染弹幕 + 强制重新拉取（新规则对旧缓存不生效）
+    plPlayerController.danmakuController?.clear();
+    plPlayerController.onDanmakuFiltersChanged?.call();
     super.dispose();
   }
 
